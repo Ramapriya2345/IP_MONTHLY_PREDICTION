@@ -1,0 +1,8 @@
+import pickle
+
+# Example mapping
+crime_mapping = {0: "Theft", 1: "Assault", 2: "Robbery", 3: "Fraud"}
+
+# Save the mapping
+with open("crime_mapping.pkl", "wb") as f:
+    pickle.dump(crime_mapping, f)

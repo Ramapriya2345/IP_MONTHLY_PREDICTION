@@ -1,0 +1,10 @@
+import pickle
+from sklearn.ensemble import RandomForestClassifier  # or whichever model you used
+
+# Suppose X_train and y_train are your training data
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# Save the trained model
+with open("crime_prediction_model.pkl", "wb") as f:
+    pickle.dump(model, f)

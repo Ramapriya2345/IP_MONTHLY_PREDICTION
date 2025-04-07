@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Prediction Monthly Report Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .result {
+            display: none;
+            margin-top: 20px;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .area-selection {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bg">
+        <div class="container">
+            <h1><i class="fas fa-chart-line"></i> Crime Prediction Monthly Report Generator</h1>
+            <p class="lead">Generate predictive crime reports using machine learning</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3><i class="fas fa-file-alt"></i> Generate Monthly Prediction Report</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="reportForm">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="month" class="form-label">Month</label>
+                                    <select class="form-select" id="month" name="month" required>
+                                        {% for month_num, month_name in months %}
+                                        <option value="{{ month_num }}" {% if month_num == next_month %}selected{% endif %}>{{ month_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="year" class="form-label">Year</label>
+                                    <select class="form-select" id="year" name="year" required>
+                                        {% for year in years %}
+                                        <option value="{{ year }}" {% if year == next_year %}selected{% endif %}>{{ year }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Areas to Include (Optional)</label>
+                                <div class="card">
+                                    <div class="card-body area-selection">
+                                        <div class="row">
+                                            {% for i in range(1, 21) %}
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="{{ i }}" id="area{{ i }}" name="area_ids">
+                                                    <label class="form-check-label" for="area{{ i }}">
+                                                        Area {{ i }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {% if i % 3 == 0 %}</div><div class="row">{% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-text">Leave all unchecked to include all areas</div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-file-pdf"></i> Generate Report
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="loading" id="loading">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p>Generating predictions and creating report...</p>
+                            <p class="text-muted">This may take a few moments</p>
+                        </div>
+                        
+                        <div class="result" id="result">
+                            <div class="alert alert-success">
+                                <h4><i class="fas fa-check-circle"></i> Report Generated Successfully!</h4>
+                                <p>Your crime prediction report is ready for download.</p>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a id="downloadLink" href="#" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-download"></i> Download Report
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="result" id="error">
+                            <div class="alert alert-danger">
+                                <h4><i class="fas fa-exclamation-circle"></i> Error</h4>
+                                <p id="errorMessage">Something went wrong. Please try again.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header bg-info text-white">
+                        <h3><i class="fas fa-info-circle"></i> About This Tool</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>This tool uses machine learning to predict crime patterns for the selected month. The generated report includes:</p>
+                        <ul>
+                            <li><strong>Crime distribution analysis</strong> by area and time</li>
+                            <li><strong>Visualization</strong> of predicted crime patterns</li>
+                            <li><strong>High-risk areas</strong> identification</li>
+                            <li><strong>Recommended actions</strong> based on predictions</li>
+                        </ul>
+                        <p>These predictions are based on historical crime data patterns and seasonal factors. The model continuously improves as more data becomes available.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="bg-dark text-white mt-5 py-3">
+        <div class="container text-center">
+            <p>Crime Prediction System &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            
+            // Submit form data via AJAX
+            fetch('/generate_report', {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+                
+                if (data.success) {
+                    // Show success message and download link
+                    document.getElementById('result').style.display = 'block';
+                    document.getElementById('downloadLink').href = data.download_url;
+                } else {
+                    // Show error message
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('errorMessage').textContent = data.error || 'An unknown error occurred.';
+                }
+            })
+            .catch(error => {
+                // Hide loading indicator and show error
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 'Network error: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
