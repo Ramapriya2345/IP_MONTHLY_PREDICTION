@@ -17,7 +17,7 @@ def train_models():
     """API endpoint to train time series models using historical data"""
     try:
         # Get parameters from request
-        data_path = request.form.get('data_path', 'crime_data.csv')
+        data_path = request.form.get('data_path', 'crime-data-from-2010-to-present.csv')
         
         # Load data
         historical_data = pd.read_csv(data_path)

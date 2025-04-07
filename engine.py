@@ -19,7 +19,7 @@ def run_forecasting():
     # This needs to be customized based on your actual data file
     try:
         print("Loading historical crime data...")
-        historical_data = pd.read_csv('crime_data.csv')  # Replace with your dataset path
+        historical_data = pd.read_csv('crime-data-from-2010-to-present.csv')  # Replace with your dataset path
         print(f"Loaded {len(historical_data)} records")
     except Exception as e:
         print(f"Error loading historical data: {e}")
